@@ -1,0 +1,2093 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>中铁一局车载设备管理中心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a4f8c;
+            --secondary-color: #3498db;
+            --accent-color: #f39c12;
+            --text-color: #2c3e50;
+            --bg-color: #f5f6fa;
+            --card-bg: #ffffff;
+            --gradient-start: #1a4f8c;
+            --gradient-end: #2980b9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+        }
+
+        /* 顶部导航样式 */
+        .top-bar {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: -1;
+        }
+
+        .top-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+            object-fit: contain;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 8px 15px;
+            transition: all 0.3s;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .nav-menu a:hover::after {
+            width: 80%;
+        }
+
+        /* 下拉菜单样式 */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-toggle {
+            display: inline-block;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            padding: 8px 15px;
+            transition: all 0.3s;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle::after {
+            content: '▼';
+            font-size: 0.7em;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .dropdown-toggle:hover {
+            color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            min-width: 160px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            border-radius: 6px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(8px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            transition: all 0.3s;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: rgba(26, 79, 140, 0.1);
+            color: var(--primary-color);
+            padding-left: 20px;
+        }
+
+        /* 轮播图样式 */
+        .banner {
+            position: relative;
+            margin-top: 80px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('D:/VScode/image/lanse.jpg') center 40% / cover;
+            animation: zoomEffect 6s ease-out forwards;
+            z-index: 0;
+        }
+
+        @keyframes zoomEffect {
+            0% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+            40% {
+                opacity: 0.2;
+            }
+            70% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(26, 79, 140, 0.7), rgba(44, 62, 80, 0.7));
+            z-index: 1;
+            animation: gradientFade 7s ease-out forwards;
+        }
+
+        @keyframes gradientFade {
+            0% {
+                opacity: 0;
+            }
+            40% {
+                opacity: 0.3;
+            }
+            70% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .banner-slide {
+            position: relative;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        .banner-text {
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 0 20px;
+            opacity: 0;
+            animation: textFade 6s ease-out 2s forwards;
+        }
+
+        @keyframes textFade {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            40% {
+                opacity: 0.3;
+                transform: translateY(20px);
+            }
+            70% {
+                opacity: 0.7;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .banner-text h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: white;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+        }
+        .banner-text p {
+            font-size: 1.6em;
+            opacity: 0.95;
+            margin: 0;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+        /* 原有样式优化 */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .left-sidebar {
+            display: none;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            height: fit-content;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .card ul {
+            list-style-position: inside;
+            margin: 1rem 0;
+        }
+
+        .card li {
+            margin: 0.5rem 0;
+            padding-left: 1rem;
+        }
+
+        .navigation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            height: fit-content;
+        }
+
+        .nav-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+        }
+
+        .nav-item i {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .nav-item:hover i {
+            transform: scale(1.1);
+        }
+
+        .nav-item h3 {
+            margin: 0.5rem 0;
+            color: var(--primary-color);
+        }
+
+        .nav-item p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .organization-chart {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .equipment-list {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 2.5rem;
+            margin-top: 4rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('image/pattern.png') center/cover;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        /* 图片展示区域样式 */
+        .achievements {
+            margin-top: 2rem;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .scroll-container {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-gallery {
+            display: flex;
+            gap: 1.5rem;
+            animation: scroll 20s linear infinite;
+            padding: 0.5rem 0;
+            width: fit-content;
+        }
+
+        .image-gallery:hover {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-300px * 6 - 1.5rem * 6));  /* 计算第一组图片的总宽度（包括间隔） */
+            }
+        }
+
+        .gallery-item {
+            flex: 0 0 300px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.4rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* 图片放大模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90vh;
+            margin-top: 2%;
+        }
+
+        .modal-caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            text-align: center;
+            color: white;
+            padding: 10px 0;
+        }
+
+        .close {
+            position: absolute;
+            right: 35px;
+            top: 15px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 视频展示区域样式 */
+        .video-section {
+            margin: 2rem 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+
+        .video-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 宽高比 */
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .video-controls {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .video-controls button {
+            padding: 0.5rem 1rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .video-controls button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* 设备普查记事板样式 */
+        .inspection-board {
+            position: fixed;
+            left: -300px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            background: var(--primary-color);
+            color: white;
+            transition: left 0.3s;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .inspection-board:hover {
+            left: 0;
+        }
+
+        .inspection-label {
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            white-space: nowrap;
+            cursor: pointer;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .inspection-content {
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            background: #f5f6fa;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .inspection-form {
+            margin-bottom: 15px;
+        }
+
+        .inspection-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .inspection-form input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .inspection-form input::placeholder {
+            color: #999;
+        }
+
+        .inspection-record {
+            background: white;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .inspection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 5px;
+            background: white;
+            border-radius: 4px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .inspection-item {
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .inspection-item:hover {
+            background: #e9ecef;
+        }
+
+        .inspection-item label {
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .inspection-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .inspection-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .inspection-btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .inspection-btn-primary:hover {
+            background: var(--secondary-color);
+        }
+
+        .inspection-btn-secondary {
+            background: #e9ecef;
+            color: var(--text-color);
+            border: 1px solid #ddd;
+        }
+
+        .inspection-btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        /* 最新动态样式 */
+        .news-section {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .news-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .news-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .news-body {
+            padding: 15px 20px;
+        }
+
+        .news-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .news-item {
+            padding: 12px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            position: relative;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-link {
+            display: block;
+            color: var(--text-color);
+            text-decoration: none;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .news-link:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+
+        .news-link:hover {
+            color: var(--primary-color);
+        }
+
+        .news-date {
+            display: block;
+            color: #888;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            padding-left: 18px;
+        }
+
+        .news-more {
+            text-align: right;
+            padding: 10px 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .news-more a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .news-more a:hover {
+            text-decoration: underline;
+        }
+
+        /* 添加新动态表单样式 */
+        .news-add-form {
+            padding: 15px;
+            border-top: 1px solid #f0f0f0;
+            display: none;
+            background-color: #f8f9fa;
+        }
+
+        .news-add-form.active {
+            display: block;
+        }
+
+        .news-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .news-textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .news-btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .news-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .news-btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .news-btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .news-btn-secondary {
+            background-color: #f1f1f1;
+            color: var(--text-color);
+            border: 1px solid #ddd;
+        }
+
+        .news-btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        .news-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* 管理模式样式 */
+        .admin-mode {
+            display: block;
+        }
+
+        .news-item .delete-btn {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--danger-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .admin-mode .news-item .delete-btn {
+            display: block;
+        }
+
+        .admin-mode .news-item {
+            padding-right: 70px;
+        }
+
+        /* 添加编辑功能样式 */
+        .news-item .edit-btn {
+            display: none;
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .admin-mode .news-item .edit-btn {
+            display: block;
+        }
+
+        /* 编辑表单样式 */
+        .news-edit-form {
+            padding: 15px;
+            border-top: 1px solid #f0f0f0;
+            display: none;
+            background-color: #f8f9fa;
+        }
+
+        .news-edit-form.active {
+            display: block;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 992px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 自定义弹窗样式 */
+        .custom-alert {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .alert-box {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+            width: 700px;
+            max-width: 95%;
+            padding: 0;
+            overflow: hidden;
+            animation: alertFadeIn 0.3s ease-out;
+        }
+
+        @keyframes alertFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-header {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: white;
+            padding: 20px 25px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
+        }
+
+        .alert-close {
+            color: white;
+            background: none;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+        }
+
+        .alert-content {
+            padding: 25px;
+            color: var(--text-color);
+            font-size: 18px;
+            line-height: 1.5;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .alert-title {
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 18px;
+        }
+
+        .alert-message {
+            margin-bottom: 18px;
+            white-space: pre-line;
+            font-size: 18px;
+        }
+
+        .alert-info {
+            color: #666;
+            font-size: 16px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .alert-footer {
+            padding: 18px 25px;
+            text-align: right;
+            border-top: 1px solid #eee;
+        }
+
+        .alert-confirm {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 18px;
+        }
+
+        .alert-confirm:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <div class="top-bar">
+        <div class="top-container">
+            <div class="logo">
+                <img src="D:\VScode\image\chezai.png" alt="车载设备管理中心logo">
+                <h1>设备管理中心</h1>
+            </div>
+            <nav class="nav-menu">
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">首页</a>
+                    <div class="dropdown-menu">
+                        <a href="D:/VScode/index/shouye.html">返回首页</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">中心简介</a>
+                    <div class="dropdown-menu">
+                        <a href="#about">中心简介</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">车载管理</a>
+                    <div class="dropdown-menu">
+                        <a href="D:/railway/wenjian/index.html">车载管理</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">设备管理</a>
+                    <div class="dropdown-menu">
+                        <a href="http://localhost:3001/">设备管理</a>
+                        <a href="D:/VScode/tupian/index.html">图片管理</a>
+                        <a href="http://localhost:3002/">问题管理</a>    
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">动态看板</a>
+                    <div class="dropdown-menu">
+                        <a href="D:/VScode/daping/index.html">维修看板</a>
+                        <a href="D:/VScode/daping1/index.html">工作看板</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">智能分析</a>
+                    <div class="dropdown-menu">
+                        <a href="D:/VScode/shujufenxi/index.html">数据分析</a>
+                        <a href="D:/VScode/suixiufenxi/碎修月度总结.html">碎修总结</a>
+                        <a href="D:/daping/frontend/public/index.html">信息管理</a>
+                        <a href="D:/VScode/qingdan/qdzd.html">清单管理</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">外部连接</a>
+                    <div class="dropdown-menu">
+                        <a href="https://vika.cn/workbench/dstr1H5Kw5sq8JF5Gs/viwlzJwHiQ6cB" target="_blank">vika数据库</a>
+                        <a href="https://www.yuque.com/dashboard/explore" target="_blank">语雀</a>
+                         <a href="https://www.example.com" target="_blank">唐小维</a>
+                          <a href="https://www.example.com" target="_blank">唐小维</a>
+                           <a href="https://www.example.com" target="_blank">唐小维</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 轮播图banner -->
+    <div class="banner">
+        <div class="banner-slide">
+            <div class="banner-text">
+                <h2>诚信创新 · 永争一流</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            <div class="main-content">
+                <!-- 最新动态区域 -->
+                <div class="news-section">
+                    <div class="news-header">
+                        <i class="fas fa-bell"></i>
+                        <h3>最新动态</h3>
+                    </div>
+                    <div class="news-body">
+                        <ul class="news-list" id="newsList">
+                            <!-- 动态列表将由JavaScript动态生成 -->
+                        </ul>
+                    </div>
+                    <div class="news-actions">
+                        <div>
+                            <button id="toggleAdminMode" class="news-btn news-btn-secondary">
+                                <i class="fas fa-cog"></i> 管理模式
+                            </button>
+                            <button id="exportNews" class="news-btn news-btn-secondary">
+                                <i class="fas fa-file-export"></i> 导出
+                            </button>
+                        </div>
+                        <button id="showAddNews" class="news-btn news-btn-primary">
+                            <i class="fas fa-plus"></i> 添加动态
+                        </button>
+                    </div>
+                    <div class="news-add-form" id="newsAddForm">
+                        <h4 style="margin-bottom: 15px;">添加新动态</h4>
+                        <input type="text" id="newsTitle" class="news-input" placeholder="动态标题" required>
+                        <textarea id="newsContent" class="news-textarea" placeholder="动态内容（可选）"></textarea>
+                        <label for="newsDate">日期时间:</label>
+                        <input type="datetime-local" id="newsDate" class="news-input" required>
+                        <div class="news-btn-group">
+                            <button id="cancelAddNews" class="news-btn news-btn-secondary">取消</button>
+                            <button id="submitNews" class="news-btn news-btn-primary">发布</button>
+                        </div>
+                    </div>
+                    <div class="news-edit-form" id="newsEditForm">
+                        <h4 style="margin-bottom: 15px;">编辑动态</h4>
+                        <input type="hidden" id="editNewsIndex">
+                        <input type="text" id="editNewsTitle" class="news-input" placeholder="动态标题" required>
+                        <textarea id="editNewsContent" class="news-textarea" placeholder="动态内容（可选）"></textarea>
+                        <label for="editNewsDate">日期时间:</label>
+                        <input type="datetime-local" id="editNewsDate" class="news-input" required>
+                        <div class="news-btn-group">
+                            <button id="cancelEditNews" class="news-btn news-btn-secondary">取消</button>
+                            <button id="updateNews" class="news-btn news-btn-primary">更新</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <section class="card">
+                    <h2>车载中心简介</h2>
+                    <p>车载设备管理中心工作属检修车间下设机构，由检修车间负责车载设备管理中心各项工作。分管单位配属机车安全装备的日常维护保养工作。</p>
+                    
+                    <h3>组织结构</h3>
+                    <ul>
+                        <li>主任：1人（由检修车间主管安全装备技术员兼任）</li>
+                        <li>组员：监控维修人员3人</li>
+                        <li>检修车间另配备兼职人员2人</li>
+                    </ul>
+
+                    <h3>主要职责</h3>
+                    <ul>
+                        <li>负责所有车载设备日常的管、用、修工作</li>
+                        <li>负责车载设备的维护管理、联系协调工作</li>
+                        <li>负责车载设备大、中修拆装、检测；负责车载设备的准入、准出办理工作</li>
+                        <li>负责监控数据编写、灌装工作</li>
+                        <li>负责车载设备故障处理及插件维修申请工作</li>
+                        <li>负责原平南调度室测酒仪、辅助设备的维护管理工作</li>
+                        <li>负责机车车载设备故障的业务指导工作</li>
+                        <li>负责机车车载设备的备用设备、物料的日常管理工作</li>
+                        <li>完成领导临时交办的各项任务</li>
+                    </ul>
+                </section>
+
+                <section class="card">
+                    <h2>机车安全装备划分</h2>
+                    <p>我公司纳入机车安全装备的装置、设备包括：</p>
+                    <ul>
+                        <li>LKJ列车运行监控记录装置</li>
+                        <li>机车监控附属装置（TAX箱、平面调车控制装置、A/F变换器、功能扩展盒）</li>
+                        <li>机车信号</li>
+                        <li>机车CIR一体化电台</li>
+                        <li>机车安防视频装置</li>
+                        <li>机车乘务员状态预警提醒系统</li>
+                        <li>调车监控装置</li>
+                        <li>JK00430走行部监测装置</li>
+                        <li>直流机车平稳操纵管理系统</li>
+                        <li>交流机车平稳操纵分析指导系统</li>
+                        <li>列尾装置</li>
+                        <li>内燃机车列车管贯通装置</li>
+                    </ul>
+                </section>
+            </div>
+
+            <div class="sidebar">
+                <div class="navigation">
+                    <a href="D:\VScode\shebeixinxi\xinxi.html" class="nav-item" target="_blank">
+                        <i class="fas fa-database"></i>
+                        <h3>设备普查</h3>
+                        <p>设备信息管理系统</p>
+                    </a>
+                    <a href="D:\VScode\chezai\xiucheng.html" class="nav-item" target="_blank">
+                        <i class="fas fa-tools"></i>
+                        <h3>辅修管理</h3>
+                        <p>月度辅修记录管理</p>
+                    </a>
+                    <a href="D:\VScode\wuziguanli\index.html" class="nav-item" target="_blank">
+                        <i class="fas fa-boxes"></i>
+                        <h3>物资管理</h3>
+                        <p>物资物料清单管理系统</p>
+                    </a>   
+                    <a href="http://localhost:8081/" class="nav-item" target="_blank">
+                        <i class="fas fa-warehouse"></i>
+                        <h3>备品管理</h3>
+                        <p>库房备品管理系统</p>
+                    </a>
+                    <a href="http://localhost:8080/" class="nav-item" target="_blank">
+                        <i class="fas fa-tasks"></i>
+                        <h3>销号管理</h3>
+                        <p>待处理问题销号管理</p>
+                    </a>
+                    <a href="D:/VScode/jishiben.html" class="nav-item" target="_blank">
+                        <i class="fas fa-book"></i>
+                        <h3>记事本</h3>
+                        <p>日常工作记录</p>
+                    </a>
+                    <a href="D:/VScode/shebeixinxi/shipin.html" class="nav-item" target="_blank">
+                        <i class="fas fa-clipboard-check"></i>
+                        <h3>视频管理</h3>
+                        <p>视频跟踪记录</p>
+                    </a>
+                    <div class="nav-item">
+                        <div class="video-container" style="padding-top: 0; height: 150px;">
+                            <video id="mainVideo" controls style="position: relative; height: 150px;">
+                                <source src="image/车载.mp4" type="video/mp4">
+                                您的浏览器不支持 HTML5 视频播放。
+                            </video>
+                        </div>
+                        <div class="video-controls" style="margin-top: 10px;">
+                            <button onclick="document.getElementById('mainVideo').play()" style="padding: 4px 8px; font-size: 12px;">播放</button>
+                            <button onclick="document.getElementById('mainVideo').pause()" style="padding: 4px 8px; font-size: 12px;">暂停</button>
+                            <button onclick="document.getElementById('mainVideo').currentTime = 0" style="padding: 4px 8px; font-size: 12px;">重播</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 添加成果展示区域 -->
+        <section class="achievements">
+            <h2>图片展示</h2>
+            <div class="scroll-container">
+                <div class="image-gallery">
+                    <!-- 第一组图片 -->
+                    <div class="gallery-item">
+                        <img src="../image/lanse.jpg" alt="蓝色证书" onclick="openModal(this)">
+                        <div class="caption">机车风采</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/zhuanli.jpg" alt="专利证书" onclick="openModal(this)">
+                        <div class="caption">专利证书</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/铁路运输企业运营机车动态在线管理研究与应用-陕西省企业管理现代化创新成果二等奖.jpg" alt="陕西省企业管理现代化创新成果二等奖" onclick="openModal(this)">
+                        <div class="caption">陕西省-企业管理现代化创新成果-二等奖</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/机车检修信息管理系统-证书.jpg" alt="机车检修信息管理系统证书" onclick="openModal(this)">
+                        <div class="caption">中国中铁-机车检修信息管理系统证书-三等奖</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="D:\VScode\index\image\kejijiang.jpg" alt="新运公司-科技三等奖" onclick="openModal(this)">
+                        <div class="caption">新运公司-科学技术-三等奖</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/ceshi.jpg" alt="测试认证" onclick="openModal(this)">
+                        <div class="caption">程序升级</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="D:\VScode\index\image\qingdan.jpg" alt="工作清单" onclick="openModal(this)">
+                        <div class="caption">工作清单</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/7130.jpg" alt="7130" onclick="openModal(this)">
+                        <div class="caption">7130</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="D:\VScode\index\image\dianluban.jpg" alt="电路板" onclick="openModal(this)">
+                        <div class="caption">平调主板</div>
+                    </div>
+
+                    <!-- 复制第一组图片实现无缝循环 -->
+                    <div class="gallery-item">
+                        <img src="../image/lanse.jpg" alt="蓝色证书" onclick="openModal(this)">
+                        <div class="caption">机车风采</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/zhuanli.jpg" alt="专利证书" onclick="openModal(this)">
+                        <div class="caption">专利证书</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/铁路运输企业运营机车动态在线管理研究与应用-陕西省企业管理现代化创新成果二等奖.jpg" alt="陕西省企业管理现代化创新成果二等奖" onclick="openModal(this)">
+                        <div class="caption">陕西省-企业管理现代化创新成果-二等奖</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/机车检修信息管理系统-证书.jpg" alt="机车检修信息管理系统证书" onclick="openModal(this)">
+                        <div class="caption">中国中铁-机车检修信息管理系统证书-三等奖</div>
+                    </div>             
+                    <div class="gallery-item">
+                        <img src="D:\VScode\index\image\kejijiang.jpg" alt="新运公司-科技三等奖" onclick="openModal(this)">
+                        <div class="caption">新运公司-科学技术-三等奖</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/ceshi.jpg" alt="测试认证" onclick="openModal(this)">
+                        <div class="caption">程序升级</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="D:\VScode\index\image\qingdan.jpg" alt="工作清单" onclick="openModal(this)">
+                        <div class="caption">工作清单</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="../image/7130.jpg" alt="7130" onclick="openModal(this)">
+                        <div class="caption">7130</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="D:\VScode\index\image\dianluban.jpg" alt="电路板" onclick="openModal(this)">
+                        <div class="caption">平调主板</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 设备普查记事板 -->
+        <div class="inspection-board">
+            <div class="inspection-label">设备普查记事板</div>
+            <div class="inspection-content">
+                <div class="inspection-form">
+                    <label>普查时间:</label>
+                    <input type="date" id="inspectionDate">
+                    <label>普查名称:</label>
+                    <input type="text" id="inspectionName" placeholder="设备普查">
+                </div>
+                
+                <div class="inspection-record">
+                    <div id="currentInspection">当前显示的是 由 设备普查 完成的普查记录</div>
+                    <div id="completedLocomotives">已完成普查的机车 (3台): 7181、7745、7766</div>
+                </div>
+
+                <div class="inspection-grid">
+                    <!-- 机车选择项将通过JavaScript动态生成 -->
+                </div>
+
+                <div class="inspection-buttons">
+                    <button class="inspection-btn inspection-btn-secondary" onclick="clearInspection()">清除选择</button>
+                    <button class="inspection-btn inspection-btn-primary" onclick="saveInspection()">手动保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2024 中铁一局车载设备管理中心 版权所有</p>
+    </footer>
+
+    <!-- 添加模态框 -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="modalCaption" class="modal-caption"></div>
+    </div>
+
+    <!-- 自定义弹窗 -->
+    <div class="custom-alert" id="customAlert">
+        <div class="alert-box">
+            <div class="alert-header">
+                <span id="alertHeaderText">系统提示</span>
+                <button class="alert-close" onclick="closeCustomAlert()">&times;</button>
+            </div>
+            <div class="alert-content">
+                <div id="alertTitle" class="alert-title"></div>
+                <div id="alertMessage" class="alert-message"></div>
+                <div id="alertInfo" class="alert-info"></div>
+            </div>
+            <div class="alert-footer">
+                <button class="alert-confirm" onclick="closeCustomAlert()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义确认弹窗 -->
+    <div class="custom-alert" id="customConfirm">
+        <div class="alert-box">
+            <div class="alert-header">
+                <span>确认操作</span>
+                <button class="alert-close" onclick="closeCustomConfirm(false)">&times;</button>
+            </div>
+            <div class="alert-content">
+                <div id="confirmMessage" class="alert-message"></div>
+            </div>
+            <div class="alert-footer">
+                <button class="alert-confirm" style="background-color: #6c757d; margin-right: 10px;" onclick="closeCustomConfirm(false)">取消</button>
+                <button class="alert-confirm" onclick="closeCustomConfirm(true)">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 图片放大功能
+        function openModal(img) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            const captionText = document.getElementById("modalCaption");
+            
+            modal.style.display = "block";
+            modalImg.src = img.src;
+            captionText.innerHTML = img.nextElementSibling.innerHTML;
+        }
+
+        function closeModal() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById("imageModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // 初始化设备普查记事板
+        function initInspectionBoard() {
+            const locoNumbers = ['579', '580', '582', '588', '7129', '7130', '7176', '7180', 
+                               '7181', '7198', '7210', '7211', '7212', '7213', '7284', '7285', 
+                               '7286', '7287', '7745', '7766'];
+            
+            const grid = document.querySelector('.inspection-grid');
+            locoNumbers.forEach(number => {
+                const item = document.createElement('div');
+                item.className = 'inspection-item';
+                item.innerHTML = `
+                    <input type="checkbox" id="loco${number}" value="${number}">
+                    <label for="loco${number}">${number}</label>
+                `;
+                grid.appendChild(item);
+            });
+
+            // 设置默认日期为今天
+            document.getElementById('inspectionDate').valueAsDate = new Date();
+            
+            // 加载上次的记录
+            loadLastInspection();
+        }
+
+        function clearInspection() {
+            document.querySelectorAll('.inspection-item input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            updateInspectionSummary();
+        }
+
+        function saveInspection() {
+            const date = document.getElementById('inspectionDate').value;
+            const name = document.getElementById('inspectionName').value || '设备普查';
+            
+            const selectedLocos = Array.from(document.querySelectorAll('.inspection-item input:checked'))
+                .map(cb => cb.value);
+
+            if (selectedLocos.length === 0) {
+                alert('请至少选择一台机车');
+                return;
+            }
+
+            const record = {
+                date,
+                name,
+                locomotives: selectedLocos,
+                timestamp: new Date().toISOString()
+            };
+
+            const records = JSON.parse(localStorage.getItem('inspectionRecords') || '[]');
+            records.push(record);
+            localStorage.setItem('inspectionRecords', JSON.stringify(records));
+
+            updateInspectionSummary();
+            alert('保存成功');
+        }
+
+        function updateInspectionSummary() {
+            const date = document.getElementById('inspectionDate').value;
+            const name = document.getElementById('inspectionName').value || '设备普查';
+            
+            const selectedLocos = Array.from(document.querySelectorAll('.inspection-item input:checked'))
+                .map(cb => cb.value);
+
+            document.getElementById('currentInspection').textContent = 
+                `当前显示的是${date} 由 ${name} 完成的普查记录`;
+            
+            if (selectedLocos.length > 0) {
+                document.getElementById('completedLocomotives').textContent = 
+                    `已完成普查的机车 (${selectedLocos.length}台): ${selectedLocos.join('、')}`;
+            } else {
+                document.getElementById('completedLocomotives').textContent = '';
+            }
+        }
+
+        function loadLastInspection() {
+            const records = JSON.parse(localStorage.getItem('inspectionRecords') || '[]');
+            if (records.length > 0) {
+                const lastRecord = records[records.length - 1];
+                
+                document.getElementById('inspectionDate').value = lastRecord.date;
+                document.getElementById('inspectionName').value = lastRecord.name;
+
+                lastRecord.locomotives.forEach(loco => {
+                    const checkbox = document.getElementById(`loco${loco}`);
+                    if (checkbox) checkbox.checked = true;
+                });
+
+                updateInspectionSummary();
+            }
+        }
+
+        // 添加事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            initInspectionBoard();
+            
+            document.getElementById('inspectionDate').addEventListener('change', updateInspectionSummary);
+            document.getElementById('inspectionName').addEventListener('input', updateInspectionSummary);
+            document.querySelectorAll('.inspection-item input').forEach(checkbox => {
+                checkbox.addEventListener('change', updateInspectionSummary);
+            });
+        });
+
+        // 自定义弹窗相关函数
+        let confirmCallback = null;
+
+        function showCustomAlert(title, message, info = '', customHTML = '') {
+            const alertTitle = document.getElementById('alertTitle');
+            const alertMessage = document.getElementById('alertMessage');
+            const alertInfo = document.getElementById('alertInfo');
+            const alertFooter = document.getElementById('customAlert').querySelector('.alert-footer');
+            const customAlert = document.getElementById('customAlert');
+            
+            alertTitle.textContent = title || '';
+            alertMessage.textContent = message || '';
+            alertInfo.textContent = info || '';
+            
+            // 如果没有标题，隐藏标题区域
+            alertTitle.style.display = title ? 'block' : 'none';
+            // 如果没有附加信息，隐藏信息区域
+            alertInfo.style.display = info ? 'block' : 'none';
+            
+            // 如果有自定义HTML，添加到内容区域上方
+            if (customHTML) {
+                const customContainer = document.createElement('div');
+                customContainer.className = 'custom-alert-html';
+                customContainer.innerHTML = customHTML;
+                
+                // 移除之前可能存在的自定义HTML
+                const oldCustomContainer = document.querySelector('.custom-alert-html');
+                if (oldCustomContainer) {
+                    oldCustomContainer.remove();
+                }
+                
+                alertMessage.parentNode.insertBefore(customContainer, alertInfo);
+                alertFooter.style.display = 'none'; // 隐藏默认的确定按钮
+            } else {
+                // 移除之前可能存在的自定义HTML
+                const oldCustomContainer = document.querySelector('.custom-alert-html');
+                if (oldCustomContainer) {
+                    oldCustomContainer.remove();
+                }
+                alertFooter.style.display = 'block'; // 显示默认的确定按钮
+            }
+            
+            customAlert.style.display = 'flex';
+            
+            // 阻止页面滚动
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('customAlert').style.display = 'none';
+            // 恢复页面滚动
+            document.body.style.overflow = '';
+        }
+
+        function showCustomConfirm(message, callback) {
+            const confirmMessage = document.getElementById('confirmMessage');
+            const customConfirm = document.getElementById('customConfirm');
+            
+            confirmMessage.textContent = message || '';
+            customConfirm.style.display = 'flex';
+            
+            // 存储回调函数
+            confirmCallback = callback;
+            
+            // 阻止页面滚动
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCustomConfirm(result) {
+            document.getElementById('customConfirm').style.display = 'none';
+            // 恢复页面滚动
+            document.body.style.overflow = '';
+            
+            // 执行回调函数（如果存在）
+            if (confirmCallback) {
+                confirmCallback(result);
+                confirmCallback = null;
+            }
+        }
+
+        // 最新动态相关代码
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化动态数据
+            let newsItems = JSON.parse(localStorage.getItem('newsItems') || '[]');
+            if (newsItems.length === 0) {
+                // 默认数据
+                newsItems = [
+                    {
+                        title: "车载设备管理中心2024年度工作计划发布",
+                        content: "",
+                        date: "2024-05-25T10:30"
+                    },
+                    {
+                        title: "关于加强设备日常维护工作的通知",
+                        content: "",
+                        date: "2024-05-20T14:20"
+                    },
+                    {
+                        title: "车载设备管理系统V2.0版本正式上线",
+                        content: "",
+                        date: "2024-05-15T09:00"
+                    },
+                    {
+                        title: "2024年第二季度设备检修计划安排",
+                        content: "",
+                        date: "2024-05-10T16:45"
+                    },
+                    {
+                        title: "车载设备管理培训会议通知",
+                        content: "",
+                        date: "2024-05-05T08:30"
+                    }
+                ];
+                localStorage.setItem('newsItems', JSON.stringify(newsItems));
+            }
+
+            // 渲染新闻列表
+            function renderNewsList() {
+                const newsList = document.getElementById('newsList');
+                newsList.innerHTML = '';
+                
+                // 按日期时间排序，最新的在最上面
+                const sortedNews = [...newsItems].sort((a, b) => 
+                    new Date(b.date) - new Date(a.date)
+                );
+                
+                sortedNews.forEach((item, index) => {
+                    // 查找该项目在原始数组中的索引
+                    const originalIndex = newsItems.findIndex(newsItem => 
+                        newsItem.title === item.title && 
+                        newsItem.date === item.date && 
+                        newsItem.content === item.content
+                    );
+                    
+                    // 格式化日期时间显示
+                    const dateObj = new Date(item.date);
+                    const formattedDate = dateObj.toLocaleString('zh-CN', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    const li = document.createElement('li');
+                    li.className = 'news-item';
+                    li.innerHTML = `
+                        <a href="#" class="news-link" data-index="${originalIndex}">${item.title}</a>
+                        <span class="news-date">${formattedDate}</span>
+                        <button class="edit-btn" data-index="${originalIndex}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="delete-btn" data-index="${originalIndex}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    newsList.appendChild(li);
+                });
+                
+                // 绑定编辑按钮事件
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const index = this.dataset.index;
+                        const item = newsItems[index];
+                        
+                        // 填充编辑表单
+                        document.getElementById('editNewsIndex').value = index;
+                        document.getElementById('editNewsTitle').value = item.title;
+                        document.getElementById('editNewsContent').value = item.content || '';
+                        
+                        // 将日期时间格式化为datetime-local输入框所需的格式
+                        let dateValue = item.date;
+                        if (!dateValue.includes('T')) {
+                            // 如果是旧数据，可能只有日期，没有时间部分
+                            dateValue = `${dateValue}T00:00`;
+                        }
+                        document.getElementById('editNewsDate').value = dateValue;
+                        
+                        // 显示编辑表单
+                        document.getElementById('newsEditForm').classList.add('active');
+                        
+                        // 隐藏添加表单
+                        document.getElementById('newsAddForm').classList.remove('active');
+                    });
+                });
+                
+                // 绑定删除按钮事件
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const index = this.dataset.index;
+                        showCustomConfirm('确定要删除这条动态吗？', function(confirmed) {
+                            if (confirmed) {
+                                newsItems.splice(index, 1);
+                                localStorage.setItem('newsItems', JSON.stringify(newsItems));
+                                renderNewsList();
+                            }
+                        });
+                    });
+                });
+                
+                // 绑定查看详情事件
+                document.querySelectorAll('.news-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const index = this.dataset.index;
+                        const item = newsItems[index];
+                        
+                        // 格式化日期时间显示
+                        const dateObj = new Date(item.date);
+                        const formattedDate = dateObj.toLocaleString('zh-CN', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        
+                        if (item.content) {
+                            showCustomAlert(item.title, item.content, `发布日期: ${formattedDate}`);
+                        } else {
+                            showCustomAlert(item.title, '', `发布日期: ${formattedDate}`);
+                        }
+                    });
+                });
+            }
+
+            // 初始渲染
+            renderNewsList();
+
+            // 显示/隐藏添加表单
+            document.getElementById('showAddNews').addEventListener('click', function() {
+                document.getElementById('newsAddForm').classList.add('active');
+                // 设置默认日期时间为现在
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                document.getElementById('newsDate').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            });
+
+            // 取消添加
+            document.getElementById('cancelAddNews').addEventListener('click', function() {
+                document.getElementById('newsAddForm').classList.remove('active');
+                // 清空表单
+                document.getElementById('newsTitle').value = '';
+                document.getElementById('newsContent').value = '';
+                document.getElementById('newsDate').value = '';
+            });
+
+            // 提交新动态
+            document.getElementById('submitNews').addEventListener('click', function() {
+                const title = document.getElementById('newsTitle').value.trim();
+                const content = document.getElementById('newsContent').value.trim();
+                const date = document.getElementById('newsDate').value;
+                
+                if (!title || !date) {
+                    showCustomAlert('提示', '请填写标题和日期');
+                    return;
+                }
+                
+                // 添加新动态
+                newsItems.push({
+                    title,
+                    content,
+                    date
+                });
+                
+                // 保存到本地
+                localStorage.setItem('newsItems', JSON.stringify(newsItems));
+                
+                // 重新渲染列表
+                renderNewsList();
+                
+                // 隐藏表单并清空
+                document.getElementById('newsAddForm').classList.remove('active');
+                document.getElementById('newsTitle').value = '';
+                document.getElementById('newsContent').value = '';
+                document.getElementById('newsDate').value = '';
+                
+                showCustomAlert('成功', '动态发布成功！');
+            });
+
+            // 切换管理模式
+            document.getElementById('toggleAdminMode').addEventListener('click', function() {
+                const newsList = document.getElementById('newsList');
+                newsList.classList.toggle('admin-mode');
+                
+                if (newsList.classList.contains('admin-mode')) {
+                    this.innerHTML = '<i class="fas fa-eye"></i> 浏览模式';
+                    // 重新渲染列表以确保按钮可见
+                    renderNewsList();
+                } else {
+                    this.innerHTML = '<i class="fas fa-cog"></i> 管理模式';
+                    // 重新渲染列表以移除按钮
+                    renderNewsList();
+                }
+            });
+
+            // 修改导出按钮，显示下拉菜单
+            document.getElementById('exportNews').addEventListener('click', function(e) {
+                e.preventDefault();
+                // 显示导出格式选择对话框
+                showCustomAlert('选择导出格式', '', '',
+                    `<div style="display: flex; justify-content: center; gap: 15px; margin-top: 10px;">
+                        <button class="alert-confirm" style="flex: 1;" onclick="exportNewsAs('csv')">CSV格式</button>
+                        <button class="alert-confirm" style="flex: 1;" onclick="exportNewsAs('excel')">Excel格式</button>
+                    </div>`
+                );
+            });
+
+            // 根据选择的格式导出文件
+            window.exportNewsAs = function(format) {
+                closeCustomAlert(); // 先关闭弹窗
+                
+                // 获取动态数据
+                let newsItems = JSON.parse(localStorage.getItem('newsItems') || '[]');
+                
+                // 按日期排序
+                const sortedNews = [...newsItems].sort((a, b) => 
+                    new Date(b.date) - new Date(a.date)
+                );
+                
+                if (format === 'csv') {
+                    // 创建CSV内容
+                    let csvContent = "标题,内容,日期\n";
+                    sortedNews.forEach(item => {
+                        // 处理可能包含逗号的内容
+                        const title = `"${item.title.replace(/"/g, '""')}"`;
+                        const content = `"${(item.content || '').replace(/"/g, '""')}"`;
+                        
+                        // 格式化日期时间显示
+                        const dateObj = new Date(item.date);
+                        const formattedDate = dateObj.toLocaleString('zh-CN', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        
+                        csvContent += `${title},${content},"${formattedDate}"\n`;
+                    });
+                    
+                    // 创建Blob对象
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    
+                    // 下载文件
+                    downloadFile(blob, '最新动态_' + new Date().toISOString().split('T')[0] + '.csv');
+                    
+                } else if (format === 'excel') {
+                    // 为Excel创建工作表数据
+                    let excelContent = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+                    excelContent += '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+                    excelContent += '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>最新动态</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->';
+                    excelContent += '</head><body>';
+                    excelContent += '<table border="1">';
+                    excelContent += '<tr><th>序号</th><th>标题</th><th>内容</th><th>发布日期</th></tr>';
+                    
+                    sortedNews.forEach((item, index) => {
+                        // 格式化日期时间显示
+                        const dateObj = new Date(item.date);
+                        const formattedDate = dateObj.toLocaleString('zh-CN', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        
+                        excelContent += `<tr>`;
+                        excelContent += `<td>${index + 1}</td>`;
+                        excelContent += `<td>${item.title}</td>`;
+                        excelContent += `<td>${item.content || ''}</td>`;
+                        excelContent += `<td>${formattedDate}</td>`;
+                        excelContent += `</tr>`;
+                    });
+                    
+                    excelContent += '</table></body></html>';
+                    
+                    // 创建Blob对象
+                    const blob = new Blob([excelContent], { type: 'application/vnd.ms-excel;charset=utf-8' });
+                    
+                    // 下载文件
+                    downloadFile(blob, '最新动态_' + new Date().toISOString().split('T')[0] + '.xls');
+                }
+                
+                // 显示导出成功的提示
+                setTimeout(() => {
+                    showCustomAlert('导出成功', `文件已成功导出为${format.toUpperCase()}格式`);
+                }, 500);
+            };
+
+            // 封装下载文件的函数
+            function downloadFile(blob, filename) {
+                // 创建下载链接
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+                
+                // 确保链接是可见的，这样在某些浏览器中会更可靠
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                
+                // 模拟点击
+                link.click();
+                
+                // 清理
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(link.href);
+                }, 100);
+            }
+
+            // 取消编辑
+            document.getElementById('cancelEditNews').addEventListener('click', function() {
+                document.getElementById('newsEditForm').classList.remove('active');
+            });
+
+            // 更新动态
+            document.getElementById('updateNews').addEventListener('click', function() {
+                const index = document.getElementById('editNewsIndex').value;
+                const title = document.getElementById('editNewsTitle').value.trim();
+                const content = document.getElementById('editNewsContent').value.trim();
+                const date = document.getElementById('editNewsDate').value;
+                
+                if (!title || !date) {
+                    showCustomAlert('提示', '请填写标题和日期');
+                    return;
+                }
+                
+                // 更新动态
+                newsItems[index] = {
+                    title,
+                    content,
+                    date
+                };
+                
+                // 保存到本地
+                localStorage.setItem('newsItems', JSON.stringify(newsItems));
+                
+                // 重新渲染列表
+                renderNewsList();
+                
+                // 隐藏编辑表单
+                document.getElementById('newsEditForm').classList.remove('active');
+                
+                showCustomAlert('成功', '动态更新成功！');
+            });
+        });
+    </script>
+</body>
+</html>
